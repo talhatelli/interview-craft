@@ -1,16 +1,9 @@
-import { 
-  Box, 
-  Typography, 
-  Paper, 
-  Button, 
-  Snackbar, 
-  Alert,
-  Chip 
-} from '@mui/material';
+import { Box, Typography, Paper, Button, Snackbar, Alert, Chip, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
 import { setStage, publishInterview, resetForm, clearPublishSuccess } from '../../store/slices/interviewSlice';
 import MarkdownIt from 'markdown-it';
 import styles from '../../styles/InterviewStages.module.scss';
+import { useState } from 'react';
 
 const mdParser = new MarkdownIt();
 
@@ -34,12 +27,18 @@ export default function StageThree() {
     isLoading, 
     publishSuccess 
   } = useSelector((state) => state.interview);
+  const [isPublishDialogOpen, setIsPublishDialogOpen] = useState(false);
 
   const handleEditSection = (stage) => {
     dispatch(setStage(stage));
   };
 
-  const handlePublish = async () => {
+  const handlePublishClick = () => {
+    setIsPublishDialogOpen(true);
+  };
+
+  const handlePublishConfirm = async () => {
+    setIsPublishDialogOpen(false);
     try {
       await dispatch(publishInterview()).unwrap();
       setTimeout(() => {
@@ -149,13 +148,41 @@ export default function StageThree() {
         
         <Button
           variant="contained"
-          onClick={handlePublish}
+          onClick={handlePublishClick}
           disabled={isLoading}
           className={styles.publishButton}
         >
           {isLoading ? 'Publishing...' : 'Publish Interview'}
         </Button>
       </Box>
+
+      <Dialog 
+        open={isPublishDialogOpen} 
+        onClose={() => setIsPublishDialogOpen(false)}
+      >
+        <DialogTitle>Confirm Publication</DialogTitle>
+        <DialogContent>
+          <Typography>
+            Are you sure you want to publish this interview? This action cannot be undone.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button 
+            onClick={() => setIsPublishDialogOpen(false)}
+            color="inherit"
+          >
+            Cancel
+          </Button>
+          <Button 
+            onClick={handlePublishConfirm}
+            variant="contained"
+            color="primary"
+            autoFocus
+          >
+            Yes, Publish
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       <Snackbar 
         open={publishSuccess} 

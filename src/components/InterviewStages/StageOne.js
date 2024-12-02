@@ -61,6 +61,15 @@ export default function StageOne() {
     return Object.keys(newErrors).length === 0;
   };
 
+  const isFormValid = () => {
+    return (
+      localDetails.title.trim() !== '' && 
+      localDetails.description.trim() !== '' && 
+      localDetails.duration !== '' && 
+      localDetails.workLocation !== ''
+    );
+  };
+
   useEffect(() => {
     if (validateForm()) {
       dispatch(setJobDetails(localDetails));
@@ -165,4 +174,13 @@ export default function StageOne() {
       </Box>
     </Box>
   );
-} 
+}
+
+export const isStageOneValid = (jobDetails) => {
+  return (
+    jobDetails.title.trim() !== '' && 
+    jobDetails.description.trim() !== '' && 
+    jobDetails.duration !== '' && 
+    jobDetails.workLocation !== ''
+  );
+}; 

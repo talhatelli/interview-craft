@@ -205,12 +205,12 @@ export default function StageTwo() {
       <Dialog 
         open={isEditDialogOpen} 
         onClose={() => setIsEditDialogOpen(false)}
-        maxWidth="md"
+        maxWidth="sm"
         fullWidth
         className={styles.dialogPaper}
       >
         <DialogTitle>
-          <Typography variant="h5">
+          <Typography variant="h6">
             Edit Question
           </Typography>
         </DialogTitle>
@@ -235,7 +235,7 @@ export default function StageTwo() {
           />
           <Box sx={{ mt: 4, mb: 2 }}>
             <Typography 
-              variant="h6" 
+              variant="subtitle1" 
               color="textSecondary"
               sx={{ mb: 2 }}
             >
@@ -250,14 +250,14 @@ export default function StageTwo() {
               sx={{ 
                 width: '100%',
                 '& .MuiSlider-thumb': {
-                  width: 20,
-                  height: 20
+                  width: 15,
+                  height: 15
                 },
                 '& .MuiSlider-track': {
-                  height: 8
+                  height: 5
                 },
                 '& .MuiSlider-rail': {
-                  height: 8
+                  height: 5
                 }
               }}
             />
@@ -290,3 +290,7 @@ export default function StageTwo() {
     </Box>
   );
 }
+
+export const isStageTwoValid = (questions) => {
+  return questions.length > 0;
+};

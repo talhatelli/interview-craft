@@ -5,24 +5,36 @@ import StageOne from '../components/InterviewStages/StageOne';
 import StageTwo from '../components/InterviewStages/StageTwo';
 import StageThree from '../components/InterviewStages/StageThree';
 import styles from '../styles/InterviewStages.module.scss';
+import { isStageOneValid } from '../components/InterviewStages/StageOne';
+import { isStageTwoValid } from '../components/InterviewStages/StageTwo';
 
 const steps = ['Job Details', 'Configure Questions', 'Summary & Review'];
 
 export default function Home() {
   const dispatch = useDispatch();
   const currentStage = useSelector((state) => state.interview.stage);
-  const currentState = useSelector((state) => state);
+  const jobDetails = useSelector((state) => state.interview.jobDetails);
+  const questions = useSelector((state) => state.interview.questions);
 
   const handleNext = () => {
-    // Local storage'a kaydet
-    localStorage.setItem('interviewAppState', JSON.stringify(currentState));
+    localStorage.setItem('interviewAppState', JSON.stringify(currentStage));
     
-    // Sonraki aşamaya geç
     dispatch(setStage(currentStage + 1));
   };
 
   const handleBack = () => {
     dispatch(setStage(currentStage - 1));
+  };
+
+  const isNextButtonEnabled = () => {
+    switch (currentStage) {
+      case 1:
+        return isStageOneValid(jobDetails);
+      case 2:
+        return isStageTwoValid(questions);
+      default:
+        return false;
+    }
   };
 
   const renderStage = () => {
@@ -64,7 +76,7 @@ export default function Home() {
           <Button
             variant="contained"
             onClick={handleNext}
-            disabled={currentStage === 3}
+            disabled={!isNextButtonEnabled()}
           >
             Next
           </Button>
