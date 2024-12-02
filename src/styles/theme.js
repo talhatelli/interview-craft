@@ -6,7 +6,7 @@ const theme = createTheme({
       main: '#6366F1', 
     },
     secondary: {
-      main: '#EC4899', // Pink
+      main: '#EC4899', 
     },
     background: {
       default: '#F9FAFB',

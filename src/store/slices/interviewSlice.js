@@ -1,20 +1,30 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const initialState = {
-  stage: 1,
-  jobDetails: {
-    title: '',
-    description: '',
-    duration: '10',
-    workLocation: 'onsite',
-  },
-  questions: [],
-  isLoading: false,
+const getInitialState = () => {
+  if (typeof window !== 'undefined') {
+    const savedState = localStorage.getItem('interviewState');
+    if (savedState) {
+      const parsedState = JSON.parse(savedState);
+      return parsedState.interview;
+    }
+  }
+  
+  return {
+    stage: 1,
+    jobDetails: {
+      title: '',
+      description: '',
+      duration: '10',
+      workLocation: 'onsite',
+    },
+    questions: [],
+    isLoading: false,
+  };
 };
 
 const interviewSlice = createSlice({
   name: 'interview',
-  initialState,
+  initialState: getInitialState(),
   reducers: {
     setStage: (state, action) => {
       state.stage = action.payload;
@@ -43,6 +53,7 @@ const interviewSlice = createSlice({
     setLoading: (state, action) => {
       state.isLoading = action.payload;
     },
+    resetState: () => getInitialState(),
   },
 });
 
@@ -54,6 +65,7 @@ export const {
   updateQuestion,
   reorderQuestions,
   setLoading,
+  resetState,
 } = interviewSlice.actions;
 
 export default interviewSlice.reducer; 

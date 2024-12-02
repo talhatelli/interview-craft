@@ -12,10 +12,8 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Analytics sadece client-side'da çalışmalı
 let analytics;
 if (typeof window !== 'undefined') {
   analytics = getAnalytics(app);

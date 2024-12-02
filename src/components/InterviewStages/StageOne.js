@@ -10,27 +10,44 @@ import {
   FormControl,
   Select,
   MenuItem,
-  InputLabel
 } from '@mui/material';
+import MarkdownIt from 'markdown-it';
+import MdEditor from 'react-markdown-editor-lite';
+import 'react-markdown-editor-lite/lib/index.css';
 import { setJobDetails } from '../../store/slices/interviewSlice';
 import styles from '../../styles/InterviewStages.module.scss';
+
+const mdParser = new MarkdownIt();
 
 const initialDetails = {
   title: '',
   description: '',
   duration: '10',
-  workLocation: 'onsite', // 'remote', 'hybrid', 'onsite'
+  workLocation: 'onsite',
 };
 
-const durationOptions = [
-  '10', '15', '20', '30', '45', '60'
-];
+const durationOptions = ['10', '15', '20', '30', '45', '60'];
 
 export default function StageOne() {
   const dispatch = useDispatch();
   const jobDetails = useSelector((state) => state.interview.jobDetails) || initialDetails;
   const [localDetails, setLocalDetails] = useState(jobDetails);
   const [errors, setErrors] = useState({});
+
+  const handleEditorChange = ({ text }) => {
+    setLocalDetails(prev => ({
+      ...prev,
+      description: text
+    }));
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setLocalDetails(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
 
   const validateForm = () => {
     const newErrors = {};
@@ -44,14 +61,6 @@ export default function StageOne() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setLocalDetails(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
   useEffect(() => {
     if (validateForm()) {
       dispatch(setJobDetails(localDetails));
@@ -60,11 +69,11 @@ export default function StageOne() {
 
   return (
     <Box className={styles.stageContainer}>
-      <Typography variant="h6" gutterBottom>
-        Job Description Details
+      <Typography variant="h5" gutterBottom>
+        Job Details
       </Typography>
       
-      <Box component="form" className={styles.form}>
+      <Box className={styles.form}>
         <TextField
           fullWidth
           label="Job Title"
@@ -73,31 +82,29 @@ export default function StageOne() {
           onChange={handleChange}
           error={!!errors.title}
           helperText={errors.title}
-          placeholder="e.g., Frontend Developer"
           className={styles.formField}
-        />
-        
-        <TextField
-          fullWidth
-          multiline
-          rows={6}
-          label="Job Description"
-          name="description"
-          value={localDetails.description}
-          onChange={handleChange}
-          error={!!errors.description}
-          helperText={errors.description}
-          className={styles.formField}
-          placeholder="Write a detailed job description..."
         />
 
-        <FormControl fullWidth className={styles.formField}>
-          <InputLabel>Interview Duration (AI will generate 6 questions)</InputLabel>
+        <Box className={styles.editorContainer}>
+          <MdEditor
+            style={{ height: '300px' }}
+            renderHTML={text => mdParser.render(text)}
+            onChange={handleEditorChange}
+            value={localDetails.description}
+            className={errors.description ? styles.editorError : ''}
+          />
+          {errors.description && (
+            <Typography className={styles.error}>
+              {errors.description}
+            </Typography>
+          )}
+        </Box>
+
+        <FormControl fullWidth>
           <Select
             name="duration"
             value={localDetails.duration}
             onChange={handleChange}
-            label="Interview Duration (AI will generate 6 questions)"
           >
             {durationOptions.map((duration) => (
               <MenuItem key={duration} value={duration}>
