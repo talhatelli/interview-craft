@@ -1,0 +1,234 @@
+.mainContainer {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.stageContent {
+    margin: 2rem 0;
+    min-height: 400px;
+}
+
+.navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+}
+
+.stageContainer {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.formField {
+    margin-bottom: 1rem;
+}
+
+.questionItem {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+
+    &:hover {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+}
+
+.questionHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.weightageContainer {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.error {
+    color: #d32f2f;
+    font-size: 0.75rem;
+    margin-top: 4px;
+    margin-left: 14px;
+}
+
+.summarySection {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.sectionHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.sectionContent {
+    padding: 0.5rem 0;
+}
+
+.questionSummary {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e0e0e0;
+
+    &:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+}
+
+.locationSection {
+    margin-top: 1rem;
+    padding: 1rem 0;
+
+    :global(.MuiFormControlLabel-root) {
+        margin-right: 2rem;
+        align-items: flex-start;
+    }
+
+    :global(.MuiRadio-root) {
+        margin-top: -8px;
+    }
+}
+
+.editButton {
+    color: #6366F1;
+    border-color: #6366F1;
+
+    &:hover {
+        background-color: rgba(99, 102, 241, 0.04);
+    }
+}
+
+.navigationButtons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+}
+
+.backButton {
+    color: #6B7280;
+    border-color: #6B7280;
+}
+
+.publishButton {
+    background-color: #6366F1;
+
+    &:hover {
+        background-color: #4F46E5;
+    }
+}
+
+.questionForm {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.questionInput {
+    margin-bottom: 1.5rem;
+}
+
+.weightageSection {
+    display: flex;
+    align-items: center;
+    margin: 1rem 0;
+}
+
+.questionCard {
+    margin: 1rem 0;
+    padding: 1.5rem;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.questionHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.questionNumber {
+    color: #6B7280;
+}
+
+.questionContent {
+    margin: 1rem 0;
+}
+
+.questionFooter {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+}
+
+.addButton {
+    margin-top: 1rem;
+    background-color: #6366F1;
+
+    &:hover {
+        background-color: #4F46E5;
+    }
+}
+
+.removeButton {
+    color: #EF4444;
+
+    &:hover {
+        background-color: rgba(239, 68, 68, 0.04);
+    }
+}
+
+.dialogPaper {
+    :global {
+        .MuiDialog-paper {
+            @media (max-width: 600px) {
+                margin: 16px;
+                width: calc(100% - 32px);
+                max-height: calc(100% - 32px);
+            }
+        }
+
+        .MuiDialogContent-root {
+            @media (max-width: 600px) {
+                padding: 16px !important;
+            }
+        }
+
+        .MuiDialogActions-root {
+            @media (max-width: 600px) {
+                padding: 16px !important;
+                flex-direction: column;
+                gap: 8px !important;
+
+                button {
+                    width: 100%;
+                }
+            }
+        }
+    }
+}
