@@ -1,4 +1,5 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { saveInterview } from '../../services/interviewService';
 
 const getInitialState = () => {
   if (typeof window !== 'undefined') {
@@ -21,6 +22,26 @@ const getInitialState = () => {
     isLoading: false,
   };
 };
+
+// Async thunk for publishing interview
+export const publishInterview = createAsyncThunk(
+  'interview/publishInterview',
+  async (_, { getState }) => {
+    const state = getState().interview;
+    const interviewData = {
+      jobDetails: state.jobDetails,
+      questions: state.questions,
+      createdAt: new Date().toISOString()
+    };
+    
+    try {
+      const interviewId = await saveInterview(interviewData);
+      return interviewId;
+    } catch (error) {
+      throw error;
+    }
+  }
+);
 
 const interviewSlice = createSlice({
   name: 'interview',
@@ -54,6 +75,19 @@ const interviewSlice = createSlice({
       state.isLoading = action.payload;
     },
     resetState: () => getInitialState(),
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(publishInterview.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(publishInterview.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.publishedId = action.payload;
+      })
+      .addCase(publishInterview.rejected, (state) => {
+        state.isLoading = false;
+      });
   },
 });
 

@@ -7,9 +7,9 @@ import styles from '../../styles/InterviewStages.module.scss';
 const mdParser = new MarkdownIt();
 
 const getDifficultyColor = (weightage) => {
-  if (weightage <= 33) return '#4caf50'; // Easy - Green
-  if (weightage <= 66) return '#ff9800'; // Medium - Orange
-  return '#f44336'; // Hard - Red
+  if (weightage <= 33) return '#4caf50'; 
+  if (weightage <= 66) return '#ff9800'; 
+  return '#f44336';
 };
 
 const getDifficultyLabel = (weightage) => {
@@ -99,7 +99,7 @@ export default function StageThree() {
                     color: 'white',
                     fontWeight: 'bold',
                     ml: 2,
-                    minWidth: '100px'
+                    width: '120px'
                   }}
                 />
               </Box>
