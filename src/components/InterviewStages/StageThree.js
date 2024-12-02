@@ -1,6 +1,14 @@
-import { Box, Typography, Paper, Button, Chip } from '@mui/material';
+import { 
+  Box, 
+  Typography, 
+  Paper, 
+  Button, 
+  Snackbar, 
+  Alert,
+  Chip 
+} from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
-import { setStage, publishInterview } from '../../store/slices/interviewSlice';
+import { setStage, publishInterview, resetForm, clearPublishSuccess } from '../../store/slices/interviewSlice';
 import MarkdownIt from 'markdown-it';
 import styles from '../../styles/InterviewStages.module.scss';
 
@@ -20,14 +28,30 @@ const getDifficultyLabel = (weightage) => {
 
 export default function StageThree() {
   const dispatch = useDispatch();
-  const { jobDetails, questions, isLoading } = useSelector((state) => state.interview);
+  const { 
+    jobDetails, 
+    questions, 
+    isLoading, 
+    publishSuccess 
+  } = useSelector((state) => state.interview);
 
   const handleEditSection = (stage) => {
     dispatch(setStage(stage));
   };
 
   const handlePublish = async () => {
-    await dispatch(publishInterview());
+    try {
+      await dispatch(publishInterview()).unwrap();
+      setTimeout(() => {
+        dispatch(resetForm());
+      }, 2000);
+    } catch (error) {
+      console.error('Failed to publish interview:', error);
+    }
+  };
+
+  const handleCloseSnackbar = () => {
+    dispatch(clearPublishSuccess());
   };
 
   return (
@@ -57,7 +81,12 @@ export default function StageThree() {
             <strong>Duration:</strong> {jobDetails.duration} minutes
           </Typography>
           <Typography variant="body1" gutterBottom>
-            <strong>Location:</strong> {jobDetails.workLocation.charAt(0).toUpperCase() + jobDetails.workLocation.slice(1)}
+            <strong>Location:</strong> 
+            <Chip 
+              label={jobDetails.workLocation} 
+              size="small" 
+              sx={{ ml: 1 }}
+            />
           </Typography>
           <Typography variant="body1" gutterBottom>
             <strong>Description:</strong>
@@ -71,9 +100,9 @@ export default function StageThree() {
         </Box>
       </Paper>
 
-      <Paper className={styles.summarySection}>
+      <Paper className={styles.summarySection} sx={{ mt: 3 }}>
         <Box className={styles.sectionHeader}>
-          <Typography variant="h6">Interview Questions</Typography>
+          <Typography variant="h6">Questions ({questions.length})</Typography>
           <Button 
             variant="outlined" 
             size="small"
@@ -112,20 +141,36 @@ export default function StageThree() {
         <Button
           variant="outlined"
           onClick={() => handleEditSection(2)}
+          className={styles.backButton}
+          disabled={isLoading}
         >
           Back
         </Button>
         
         <Button
           variant="contained"
-          color="primary"
           onClick={handlePublish}
           disabled={isLoading}
           className={styles.publishButton}
         >
-          Publish Interview
+          {isLoading ? 'Publishing...' : 'Publish Interview'}
         </Button>
       </Box>
+
+      <Snackbar 
+        open={publishSuccess} 
+        autoHideDuration={2000} 
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert 
+          onClose={handleCloseSnackbar} 
+          severity="success" 
+          sx={{ width: '100%' }}
+        >
+          Interview published successfully!
+        </Alert>
+      </Snackbar>
     </Box>
   );
 } 

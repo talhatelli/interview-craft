@@ -1,29 +1,35 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { saveInterview } from '../../services/interviewService';
 
-const getInitialState = () => {
-  if (typeof window !== 'undefined') {
-    const savedState = localStorage.getItem('interviewState');
-    if (savedState) {
-      const parsedState = JSON.parse(savedState);
-      return parsedState.interview;
-    }
-  }
-  
-  return {
-    stage: 1,
-    jobDetails: {
-      title: '',
-      description: '',
-      duration: '10',
-      workLocation: 'onsite',
-    },
-    questions: [],
-    isLoading: false,
-  };
+const defaultInitialState = {
+  stage: 1,
+  jobDetails: {
+    title: '',
+    description: '',
+    duration: '10',
+    workLocation: 'onsite',
+  },
+  questions: [],
+  isLoading: false,
+  publishSuccess: false,
 };
 
-// Async thunk for publishing interview
+const getInitialState = () => {
+  try {
+    if (typeof window !== 'undefined') {
+      const savedState = localStorage.getItem('interviewAppState');
+      if (savedState) {
+        const parsedState = JSON.parse(savedState);
+        return parsedState.interview || defaultInitialState;
+      }
+    }
+    return defaultInitialState;
+  } catch (error) {
+    console.error('Error loading initial state:', error);
+    return defaultInitialState;
+  }
+};
+
 export const publishInterview = createAsyncThunk(
   'interview/publishInterview',
   async (_, { getState }) => {
@@ -74,19 +80,30 @@ const interviewSlice = createSlice({
     setLoading: (state, action) => {
       state.isLoading = action.payload;
     },
-    resetState: () => getInitialState(),
+    resetForm: (state) => {
+      state.jobDetails = defaultInitialState.jobDetails;
+      state.questions = [];
+      state.stage = 1;
+      state.publishSuccess = false;
+    },
+    clearPublishSuccess: (state) => {
+      state.publishSuccess = false;
+    }
   },
   extraReducers: (builder) => {
     builder
       .addCase(publishInterview.pending, (state) => {
         state.isLoading = true;
+        state.publishSuccess = false;
       })
       .addCase(publishInterview.fulfilled, (state, action) => {
         state.isLoading = false;
+        state.publishSuccess = true;
         state.publishedId = action.payload;
       })
       .addCase(publishInterview.rejected, (state) => {
         state.isLoading = false;
+        state.publishSuccess = false;
       });
   },
 });
@@ -99,7 +116,8 @@ export const {
   updateQuestion,
   reorderQuestions,
   setLoading,
-  resetState,
+  resetForm,
+  clearPublishSuccess
 } = interviewSlice.actions;
 
 export default interviewSlice.reducer; 

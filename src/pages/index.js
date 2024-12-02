@@ -11,8 +11,13 @@ const steps = ['Job Details', 'Configure Questions', 'Summary & Review'];
 export default function Home() {
   const dispatch = useDispatch();
   const currentStage = useSelector((state) => state.interview.stage);
+  const currentState = useSelector((state) => state);
 
   const handleNext = () => {
+    // Local storage'a kaydet
+    localStorage.setItem('interviewAppState', JSON.stringify(currentState));
+    
+    // Sonraki aşamaya geç
     dispatch(setStage(currentStage + 1));
   };
 
