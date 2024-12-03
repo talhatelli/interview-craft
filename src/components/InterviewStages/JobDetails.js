@@ -28,7 +28,7 @@ const initialDetails = {
 
 const durationOptions = ['10', '15', '20', '30', '45', '60'];
 
-export default function StageOne() {
+export default function JobDetails() {
   const dispatch = useDispatch();
   const jobDetails = useSelector((state) => state.interview.jobDetails) || initialDetails;
   const [localDetails, setLocalDetails] = useState(jobDetails);

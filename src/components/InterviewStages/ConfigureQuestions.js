@@ -87,7 +87,7 @@ function SortableQuestionItem({ question, index, onDelete, onEdit }) {
   );
 }
 
-export default function StageTwo() {
+export default function ConfigureQuestions() {
   const dispatch = useDispatch();
   const questions = useSelector((state) => state.interview.questions) || [];
   const [newQuestion, setNewQuestion] = useState({

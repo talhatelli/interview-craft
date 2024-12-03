@@ -1,12 +1,12 @@
 import { Box, Stepper, Step, StepLabel, Button } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
 import { setStage } from '../store/slices/interviewSlice';
-import StageOne from '../components/InterviewStages/StageOne';
-import StageTwo from '../components/InterviewStages/StageTwo';
-import StageThree from '../components/InterviewStages/StageThree';
+import JobDetails from '../components/InterviewStages/JobDetails';
+import ConfigureQuestions from '../components/InterviewStages/ConfigureQuestions';
+import SummaryReview from '../components/InterviewStages/SummaryReview';
 import styles from '../styles/InterviewStages.module.scss';
-import { isStageOneValid } from '../components/InterviewStages/StageOne';
-import { isStageTwoValid } from '../components/InterviewStages/StageTwo';
+import { isStageOneValid } from '../components/InterviewStages/JobDetails';
+import { isStageTwoValid } from '../components/InterviewStages/ConfigureQuestions';
 
 const steps = ['Job Details', 'Configure Questions', 'Summary & Review'];
 
@@ -40,13 +40,13 @@ export default function Home() {
   const renderStage = () => {
     switch (currentStage) {
       case 1:
-        return <StageOne />;
+        return <JobDetails />;
       case 2:
-        return <StageTwo />;
+        return <ConfigureQuestions />;
       case 3:
-        return <StageThree />;
+        return <SummaryReview />;
       default:
-        return <StageOne />;
+        return <JobDetails />;
     }
   };
 

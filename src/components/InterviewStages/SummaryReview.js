@@ -19,7 +19,7 @@ const getDifficultyLabel = (weightage) => {
   return 'Hard';
 };
 
-export default function StageThree() {
+export default function SummaryReview() {
   const dispatch = useDispatch();
   const { 
     jobDetails, 
