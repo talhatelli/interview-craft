@@ -1,13 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
 import interviewReducer from './slices/interviewSlice';
-
-const STORAGE_KEY = 'interviewAppState';
+import { STORAGE_KEYS } from '../constants/storage';
 
 const loadState = () => {
   if (typeof window === 'undefined') return undefined;
-  
+
   try {
-    const serializedState = localStorage.getItem(STORAGE_KEY);
+    const serializedState = localStorage.getItem(STORAGE_KEYS.INTERVIEW_APP_STATE);
     if (!serializedState) return undefined;
     return JSON.parse(serializedState);
   } catch (err) {
@@ -25,10 +24,10 @@ const store = configureStore({
     getDefaultMiddleware().concat((store) => (next) => (action) => {
       const result = next(action);
       if (typeof window !== 'undefined') {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(store.getState()));
+        localStorage.setItem(STORAGE_KEYS.INTERVIEW_APP_STATE, JSON.stringify(store.getState()));
       }
       return result;
     }),
 });
 
-export default store; 
+export default store;

@@ -1,203 +1,169 @@
-import { Box, Typography, Paper, Button, Snackbar, Alert, Chip, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
-import { useSelector, useDispatch } from 'react-redux';
-import { setStage, publishInterview, resetForm, clearPublishSuccess } from '../../store/slices/interviewSlice';
-import MarkdownIt from 'markdown-it';
-import styles from '../../styles/InterviewStages.module.scss';
-import { useState } from 'react';
-
-const mdParser = new MarkdownIt();
-
-const getDifficultyColor = (weightage) => {
-  if (weightage <= 33) return '#4caf50'; 
-  if (weightage <= 66) return '#ff9800'; 
-  return '#f44336';
-};
-
-const getDifficultyLabel = (weightage) => {
-  if (weightage <= 33) return 'Easy';
-  if (weightage <= 66) return 'Medium';
-  return 'Hard';
-};
+import {
+  Box,
+  Typography,
+  Card,
+  CardHeader,
+  CardContent,
+  IconButton,
+  Paper,
+  Stack,
+  TextField,
+  Slider,
+} from "@mui/material";
+import { useSelector, useDispatch } from "react-redux";
+import { setStage } from "../../store/slices/interviewSlice";
+import EditIcon from "@mui/icons-material/Edit";
+import { SUMMARY_REVIEW_TEXT } from "../../constants/text";
 
 export default function SummaryReview() {
   const dispatch = useDispatch();
-  const { 
-    jobDetails, 
-    questions, 
-    isLoading, 
-    publishSuccess 
-  } = useSelector((state) => state.interview);
-  const [isPublishDialogOpen, setIsPublishDialogOpen] = useState(false);
+  const { jobDetails, questions } = useSelector((state) => state.interview);
 
   const handleEditSection = (stage) => {
     dispatch(setStage(stage));
   };
 
-  const handlePublishClick = () => {
-    setIsPublishDialogOpen(true);
-  };
-
-  const handlePublishConfirm = async () => {
-    setIsPublishDialogOpen(false);
-    try {
-      await dispatch(publishInterview()).unwrap();
-      setTimeout(() => {
-        dispatch(resetForm());
-      }, 2000);
-    } catch (error) {
-      console.error('Failed to publish interview:', error);
-    }
-  };
-
-  const handleCloseSnackbar = () => {
-    dispatch(clearPublishSuccess());
-  };
-
   return (
-    <Box className={styles.stageContainer}>
-      <Typography variant="h4" gutterBottom>
-        Summary & Review
-      </Typography>
+    <Box sx={{ maxWidth: 900, margin: "0 auto", p: 3 }}>
+      <Card
+        sx={{
+          mb: 3,
+          border: "1px solid",
+          borderColor: "divider",
+          borderRadius: 1,
+          boxShadow: "none",
+        }}
+      >
+        <CardHeader
+          title={SUMMARY_REVIEW_TEXT.JOB_DETAILS}
+          action={
+            <IconButton onClick={() => handleEditSection(1)} size="small" sx={{ color: "text.secondary" }}>
+              <EditIcon />
+            </IconButton>
+          }
+          sx={{
+            borderBottom: "1px solid",
+            borderColor: "divider",
+            "& .MuiCardHeader-title": {
+              fontSize: "1.1rem",
+              fontWeight: 500,
+              color: "text.primary",
+            },
+          }}
+        />
+        <CardContent>
+          <Box sx={{ display: "flex", flexDirection: "column" }}>
+            <Typography sx={{ fontWeight: 500, color: "text.primary", marginTop: 1.5 }}>
+              {SUMMARY_REVIEW_TEXT.JOB_TITLE}
+            </Typography>
+            <Typography sx={{ color: "text.secondary" }}>{jobDetails.title}</Typography>
 
-      <Paper className={styles.summarySection}>
-        <Box className={styles.sectionHeader}>
-          <Typography variant="h6">Job Details</Typography>
-          <Button 
-            variant="outlined" 
-            size="small"
-            onClick={() => handleEditSection(1)}
-            className={styles.editButton}
-          >
-            Edit
-          </Button>
-        </Box>
-        
-        <Box className={styles.sectionContent}>
-          <Typography variant="body1" gutterBottom>
-            <strong>Title:</strong> {jobDetails.title}
-          </Typography>
-          <Typography variant="body1" gutterBottom>
-            <strong>Duration:</strong> {jobDetails.duration} minutes
-          </Typography>
-          <Typography variant="body1" gutterBottom>
-            <strong>Location:</strong> 
-            <Chip 
-              label={jobDetails.workLocation} 
-              size="small" 
-              sx={{ ml: 1 }}
+            <Typography sx={{ fontWeight: 500, color: "text.primary", marginTop: 1.5 }}>
+              {SUMMARY_REVIEW_TEXT.JOB_DESCRIPTION}
+            </Typography>
+            <Box
+              sx={{
+                borderRadius: 1,
+                overflowWrap: "break-word",
+                wordWrap: "break-word",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "pre-wrap",
+                "& p": { margin: 0, color: "text.secondary" },
+              }}
+              dangerouslySetInnerHTML={{
+                __html: jobDetails.description || "",
+              }}
             />
-          </Typography>
-          <Typography variant="body1" gutterBottom>
-            <strong>Description:</strong>
-          </Typography>
-          <Box 
-            className={styles.markdownPreview}
-            dangerouslySetInnerHTML={{ 
-              __html: mdParser.render(jobDetails.description || '') 
-            }} 
-          />
-        </Box>
-      </Paper>
+          </Box>
+          <Box sx={{ display: "flex", flexDirection: "column", marginTop: 1.5 }}>
+            <Typography sx={{ color: "text.primary" }}>
+              {SUMMARY_REVIEW_TEXT.DURATION}
+            </Typography>
+            <Typography color="text.secondary">{jobDetails.duration} minutes</Typography>
+          </Box>
+        </CardContent>
+      </Card>
 
-      <Paper className={styles.summarySection} sx={{ mt: 3 }}>
-        <Box className={styles.sectionHeader}>
-          <Typography variant="h6">Questions ({questions.length})</Typography>
-          <Button 
-            variant="outlined" 
-            size="small"
-            onClick={() => handleEditSection(2)}
-            className={styles.editButton}
-          >
-            Edit
-          </Button>
-        </Box>
-        
-        <Box className={styles.sectionContent}>
-          {questions.map((question, index) => (
-            <Box key={question.id} className={styles.questionItem}>
-              <Box display="flex" alignItems="center" justifyContent="space-between">
-                <Typography variant="body1" sx={{ flex: 1 }}>
-                  <strong>{index + 1}.</strong> {question.text}
-                </Typography>
-                <Chip
-                  label={`${getDifficultyLabel(question.weightage)} (${question.weightage}%)`}
-                  size="small"
-                  sx={{
-                    backgroundColor: getDifficultyColor(question.weightage),
-                    color: 'white',
-                    fontWeight: 'bold',
-                    ml: 2,
-                    width: '120px'
-                  }}
-                />
-              </Box>
-            </Box>
-          ))}
-        </Box>
-      </Paper>
-
-      <Box className={styles.navigationButtons}>
-        <Button
-          variant="outlined"
-          onClick={() => handleEditSection(2)}
-          className={styles.backButton}
-          disabled={isLoading}
-        >
-          Back
-        </Button>
-        
-        <Button
-          variant="contained"
-          onClick={handlePublishClick}
-          disabled={isLoading}
-          className={styles.publishButton}
-        >
-          {isLoading ? 'Publishing...' : 'Publish Interview'}
-        </Button>
-      </Box>
-
-      <Dialog 
-        open={isPublishDialogOpen} 
-        onClose={() => setIsPublishDialogOpen(false)}
+      <Card
+        sx={{
+          border: "1px solid",
+          borderColor: "divider",
+          borderRadius: 1,
+          boxShadow: "none",
+        }}
       >
-        <DialogTitle>Confirm Publication</DialogTitle>
-        <DialogContent>
-          <Typography>
-            Are you sure you want to publish this interview? This action cannot be undone.
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button 
-            onClick={() => setIsPublishDialogOpen(false)}
-            color="inherit"
-          >
-            Cancel
-          </Button>
-          <Button 
-            onClick={handlePublishConfirm}
-            variant="contained"
-            color="primary"
-            autoFocus
-          >
-            Yes, Publish
-          </Button>
-        </DialogActions>
-      </Dialog>
+        <CardHeader
+          title={SUMMARY_REVIEW_TEXT.QUESTIONS}
+          action={
+            <IconButton onClick={() => handleEditSection(2)} size="small" sx={{ color: "text.secondary" }}>
+              <EditIcon />
+            </IconButton>
+          }
+          sx={{
+            borderBottom: "1px solid",
+            borderColor: "divider",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            "& .MuiCardHeader-title": {
+              fontSize: "1.1rem",
+              fontWeight: 500,
+              color: "text.primary",
+              flex: 1,
+              textAlign: "center",
+            },
+          }}
+        />
 
-      <Snackbar 
-        open={publishSuccess} 
-        autoHideDuration={2000} 
-        onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-      >
-        <Alert 
-          onClose={handleCloseSnackbar} 
-          severity="success" 
-          sx={{ width: '100%' }}
-        >
-          Interview published successfully!
-        </Alert>
-      </Snackbar>
+        <CardContent>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            {questions.map((question, index) => (
+              <Paper key={question.id} sx={{ p: 2, mb: 2, borderRadius: 2, boxShadow: 1 }}>
+                <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
+                  <Stack direction="row" spacing={1} alignItems="center">
+                    <Typography
+                      variant="subtitle1"
+                      sx={{
+                        fontWeight: 600,
+                        fontSize: "1.1rem",
+                        letterSpacing: "0.5px",
+                      }}
+                    >
+                      Question {index + 1}
+                    </Typography>
+                  </Stack>
+                </Box>
+
+                <Box sx={{ mb: 2 }}>
+                  <TextField
+                    fullWidth
+                    multiline
+                    rows={3}
+                    value={question.text}
+                    variant="outlined"
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    sx={{
+                      fontSize: "1rem",
+                    }}
+                  />
+                </Box>
+
+                <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                  <Typography variant="body2" sx={{ fontWeight: "bold", color: "text.secondary" }}>
+                    Weightage Score:
+                  </Typography>
+                  <Box sx={{ display: "flex", alignItems: "center", width: "250px", ml: 2 }}>
+                    <Slider value={question.weightage} disabled min={0} max={3} valueLabelDisplay="auto" />
+                  </Box>
+                </Box>
+              </Paper>
+            ))}
+          </Box>
+        </CardContent>
+      </Card>
     </Box>
   );
-} 
+}

@@ -1,68 +1,123 @@
-# Interview Management App
+# TalentRank Interview Creation Workflow
 
-## Proje Nedir?
+A multi-stage interview creation workflow application built with Next.js, allowing users to create, manage, and publish interviews with customizable questions and weightage scores.
 
-Interview Management App, kullanıcıların iş görüşmeleri için detayları yönetmelerine olanak tanıyan bir web uygulamasıdır. Kullanıcılar, iş ilanı bilgilerini girebilir, soruları yapılandırabilir ve son olarak görüşmeyi yayınlayabilirler. Uygulama, kullanıcı dostu bir arayüz ile iş akışını kolaylaştırır.
+## 🚀 Live Demo
 
-## Kullanılan Teknolojiler
+[View Live Demo](https://interview-craft-iwbt.vercel.app/)
 
-- **React**: Kullanıcı arayüzü oluşturmak için.
-- **Next.js**: Sunucu tarafı render'ı ve sayfa yönlendirmesi için.
-- **Redux Toolkit**: Durum yönetimi için.
-- **Firebase**: Veritabanı ve kullanıcı kimlik doğrulama için.
-- **Material-UI**: UI bileşenleri için.
+## 📸 Screenshots
 
-## Kullanılan Kütüphaneler
+<div align="center">
 
-- `@mui/material`: Material Design bileşenleri.
-- `react-redux`: Redux ile React entegrasyonu.
-- `firebase`: Firebase hizmetleri.
-- `react-markdown-editor-lite`: Markdown düzenleyici.
-- `@emotion/react` ve `@emotion/styled`: Stil yönetimi için.
+  <h3>Job Listing</h3>
+  <img src="public/screenshots/1.png" alt="Job Details Stage" width="800"/>
+  <h3>Stage 1: Job Details</h3>
+  <img src="public/screenshots/2.png" alt="Job Details Stage" width="800"/>
 
-## UI Teknolojileri
+  <h3>Stage 2: Question Management</h3>
+  <img src="public/screenshots/3.png" alt="Question Management Stage" width="800"/>
 
-![Material-UI](https://mui.com/static/logo.png)
+  <h3>Stage 3: Summary and Review</h3>
+  <img src="public/screenshots/4.png" alt="Summary Stage" width="800"/>
+</div>
 
-## Projenin Sayfaları
+## ✨ Features
 
-### 1. Sayfa: Job Details
+- Multi-stage interview creation workflow
+- Responsive design for mobile, tablet, and desktop
+- Question management with drag-and-drop functionality
+- Weightage score system for questions
+- Real-time data validation
+- Firebase integration for data persistence
+- Edit mode for existing interviews
 
-![Job Details](path/to/job-details-screenshot.png)
+## 🛠️ Built With
 
-### 2. Sayfa: Configure Questions
+- **Framework:** [Next.js](https://nextjs.org/)
+- **UI Library:** [Material-UI (MUI)](https://mui.com/)
+- **State Management:** [Redux Toolkit](https://redux-toolkit.js.org/)
+- **Styling:**
+  - SCSS
+  - CSS Modules
+- **Drag and Drop:** [@dnd-kit/sortable](https://dndkit.com/)
+- **Database:** [Firebase](https://firebase.google.com/)
+- **Deployment:** [Vercel](https://vercel.com/)
 
-![Configure Questions](path/to/configure-questions-screenshot.png)
+## 📋 Interview Creation Stages
 
-### 3. Sayfa: Summary & Review
+### Stage 1: Initial Interview Details
+- Job Title input
+- Job Description input
+- Interview Duration selection
+- Input validation
 
-![Summary & Review](path/to/summary-review-screenshot.png)
+### Stage 2: Question Management
+- Question list with mock data
+- Edit and delete functionality
+- Add new questions
+- Drag-and-drop question reordering
+- Weightage score assignment (0-3)
 
-## Nasıl Çalıştırılır?
+### Stage 3: Summary and Review
+- Complete interview overview
+- Section-specific edit capabilities
+- Publish functionality with Firebase integration
+- Update existing interviews
 
-1. **Proje Klonlama**:
+## 🚀 Getting Started
+
+1. **Clone the repository**
    ```bash
-   git clone https://github.com/username/repo-name.git
-   cd repo-name
+   git clone https://github.com/talhatelli/interview-craft.git
    ```
 
-2. **Gerekli Paketleri Yükleme**:
+2. **Install dependencies**
    ```bash
    npm install
    ```
 
-3. **Geliştirme Sunucusunu Başlatma**:
+3. **Set up environment variables**
+   Create a `.env.local` file with your Firebase configuration:
+   ```
+   NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
+   NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_auth_domain
+   NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
+   NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_storage_bucket
+   NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+   NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
+   ```
+
+4. **Run the development server**
    ```bash
    npm run dev
    ```
 
-4. **Tarayıcıda Açma**:
-   Tarayıcınızda `http://localhost:3000` adresine gidin.
+5. **Open [http://localhost:3000](http://localhost:3000) in your browser**
 
-## Katkıda Bulunma
+## 📱 Responsive Design
 
-Herhangi bir katkıda bulunmak isterseniz, lütfen bir pull request açın veya bir issue oluşturun.
+The application is fully responsive and optimized for:
+- 📱 Mobile devices
+- 📱 Tablets
+- 💻 Desktop computers
 
----
+## 🌐 License
 
-Bu README dosyası, projenizin temel bilgilerini ve nasıl çalıştırılacağını açık bir şekilde sunar. Görselleri ve diğer detayları ekleyerek daha da zenginleştirebilirsiniz.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 👤 Author
+
+Ahmet Talha Telli
+- GitHub: [@talhatelli](https://github.com/talhatelli)
+- LinkedIn: [Ahmet Talha Telli](https://www.linkedin.com/in/ahmet-talha-telli/)
+
+## 🤝 Contributing
+
+Contributions, issues, and feature requests are welcome!
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request

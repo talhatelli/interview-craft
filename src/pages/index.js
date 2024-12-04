@@ -1,87 +1,86 @@
-import { Box, Stepper, Step, StepLabel, Button } from '@mui/material';
-import { useSelector, useDispatch } from 'react-redux';
-import { setStage } from '../store/slices/interviewSlice';
-import JobDetails from '../components/InterviewStages/JobDetails';
-import ConfigureQuestions from '../components/InterviewStages/ConfigureQuestions';
-import SummaryReview from '../components/InterviewStages/SummaryReview';
-import styles from '../styles/InterviewStages.module.scss';
-import { isStageOneValid } from '../components/InterviewStages/JobDetails';
-import { isStageTwoValid } from '../components/InterviewStages/ConfigureQuestions';
+import { Box, List, Button, Typography, Container } from '@mui/material';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchAllInterviews, resetForm } from '../store/slices/interviewSlice';
+import AddIcon from '@mui/icons-material/Add';
+import InterviewListItem from '../components/InterviewStages/InterviewListItem';
+import EmptyState from '../components/common/EmptyState';
+import { ROUTES } from '../constants/routes';
+import { STORAGE_KEYS } from '../constants/storage';
+import { HOME_PAGE_TEXT } from '../constants/text';
 
-const steps = ['Job Details', 'Configure Questions', 'Summary & Review'];
-
-export default function Home() {
+export default function Index() {
   const dispatch = useDispatch();
-  const currentStage = useSelector((state) => state.interview.stage);
-  const jobDetails = useSelector((state) => state.interview.jobDetails);
-  const questions = useSelector((state) => state.interview.questions);
+  const router = useRouter();
+  const interviews = useSelector((state) => state.interview.allInterviews);
 
-  const handleNext = () => {
-    localStorage.setItem('interviewAppState', JSON.stringify(currentStage));
-    
-    dispatch(setStage(currentStage + 1));
+  useEffect(() => {
+    dispatch(fetchAllInterviews());
+  }, [dispatch]);
+
+  const handleCreateInterview = () => {
+    dispatch(resetForm());
+    localStorage.removeItem(STORAGE_KEYS.INTERVIEW_APP_STATE);
+    router.push(ROUTES.INTERVIEW.CREATE);
   };
 
-  const handleBack = () => {
-    dispatch(setStage(currentStage - 1));
-  };
-
-  const isNextButtonEnabled = () => {
-    switch (currentStage) {
-      case 1:
-        return isStageOneValid(jobDetails);
-      case 2:
-        return isStageTwoValid(questions);
-      default:
-        return false;
-    }
-  };
-
-  const renderStage = () => {
-    switch (currentStage) {
-      case 1:
-        return <JobDetails />;
-      case 2:
-        return <ConfigureQuestions />;
-      case 3:
-        return <SummaryReview />;
-      default:
-        return <JobDetails />;
-    }
+  const handleEditInterview = (interview) => {
+    router.push(ROUTES.INTERVIEW.EDIT(interview.id));
   };
 
   return (
-    <Box className={styles.mainContainer}>
-      <Stepper activeStep={currentStage - 1}>
-        {steps.map((label) => (
-          <Step key={label}>
-            <StepLabel>{label}</StepLabel>
-          </Step>
-        ))}
-      </Stepper>
-
-      <Box className={styles.stageContent}>
-        {renderStage()}
-      </Box>
-
-      {currentStage < 3 && (
-        <Box className={styles.navigation}>
-          <Button
-            variant="outlined"
-            onClick={handleBack}
-            disabled={currentStage === 1}
+    <Container maxWidth="md">
+      <Box sx={{ py: 4 }}>
+        <Box sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          mb: 4
+        }}>
+          <Typography
+            variant="h4"
+            sx={{
+              fontWeight: 600,
+              color: '#1a1a1a'
+            }}
           >
-            Back
-          </Button>
+            {HOME_PAGE_TEXT.TITLE}
+          </Typography>
           <Button
             variant="contained"
-            onClick={handleNext}
-            disabled={!isNextButtonEnabled()}
+            onClick={handleCreateInterview}
+            startIcon={<AddIcon />}
+            sx={{
+              backgroundColor: '#6200ee',
+              borderRadius: '8px',
+              padding: '10px 24px',
+              textTransform: 'none',
+              fontWeight: 500,
+              '&:hover': {
+                backgroundColor: '#6200ee',
+                opacity: 0.9,
+              }
+            }}
           >
-            Next
+            {HOME_PAGE_TEXT.CREATE_BUTTON}
           </Button>
         </Box>
-      )}
-    </Box>
+
+        {interviews && interviews.length > 0 ? (
+          <List sx={{ gap: 2 }}>
+            {interviews.map((interview) => (
+              <InterviewListItem
+                key={interview.id}
+                interview={interview}
+                onEdit={handleEditInterview}
+              />
+            ))}
+          </List>
+        ) : (
+          <EmptyState message={HOME_PAGE_TEXT.EMPTY_STATE} />
+        )}
+      </Box>
+    </Container>
   );
 }
